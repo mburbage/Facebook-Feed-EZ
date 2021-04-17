@@ -1,0 +1,115 @@
+.post-wrapper {
+	padding: 24px;
+}
+.post-inner.has-image {
+	height: 500px;
+	width: 500px;
+	position: relative;
+	margin: 0 auto;
+	border-radius: 8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	-ms-border-radius: 8px;
+	-o-border-radius: 8px;
+}
+.post-inner.no-image{
+	height: auto;
+	width: 500px;
+	position: relative;
+	margin: 0 auto;
+	border-radius: 8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	-ms-border-radius: 8px;
+	-o-border-radius: 8px;
+}
+.post-header {
+    position: relative;
+}
+.post-icon {
+    display: inline-block;
+	padding: 16px;
+}
+.post-icon img{
+	border-radius: 100%;
+	-webkit-border-radius: 100%;
+	-moz-border-radius: 100%;
+	-ms-border-radius: 100%;
+	-o-border-radius: 100%;
+	border: 1px solid #6b6b6b;
+}
+.post-name {
+    position: absolute;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.no-image .post-name{
+	position: absolute;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 600;
+    top: 50%;
+    transform: translateY(-50%);
+	color: #000;
+}
+.post-footer {
+    position: relative;
+    bottom: 0;
+    padding: 14px;
+	font-weight: 600;
+	width: 500px;
+	margin: 0 auto;
+}
+.post-engagements {
+    text-align: right;
+}
+.post-engagements a{
+	text-decoration: none !important;
+}
+.post-engagements .hide {
+    display: none;
+}
+.post-engagements div {
+    display: inline-block;
+	position: relative;
+	padding: 3px;
+}
+.facebook-feed-ez-wrapper{
+	
+}
+.facebook-feed-ez-3col {
+	display: inline-grid;
+    grid-template-columns: 33% 33% 33%;
+}
+.facebook-feed-ez-3col .post-inner.has-image {
+    height: 300px;
+    width: auto;
+    position: relative;
+    margin: 0 auto;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+}
+.facebook-feed-ez-3col .post-footer {
+    position: relative;
+    bottom: 0;
+    padding: 14px;
+    font-weight: 600;
+    width: auto;
+    margin: 0 auto;
+}
+@media screen and (max-width: 480px){
+	.post-inner.has-image {
+		height: 300px;
+		width: auto;
+	}
+	.post-footer {
+		width: auto;
+	}
+}

@@ -1,0 +1,22 @@
+.facbook-feed-ez-btn {
+	display: inline-block;
+	border: 1px solid grey;
+	padding: 5px 24px;
+	margin-left: 16px;
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: 600;
+	border-radius: 4px;
+	color: #fff;
+	background-color: #9b9b9b;
+	cursor: pointer;
+	transition: all 400ms ;
+	-webkit-transition: all 400ms ;
+	-moz-transition: all 400ms ;
+	-ms-transition: all 400ms ;
+	-o-transition: all 400ms ;
+}
+
+.facbook-feed-ez-btn:hover {
+	background-color: #636363;
+}
