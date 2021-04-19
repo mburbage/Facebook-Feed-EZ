@@ -74,8 +74,8 @@ function facebook_feed_ez_init() {
 	$page_id = esc_html(get_option('facebook_feed_ez_page_id'));
 
 	$fb = new \Facebook\Facebook([
-		'app_id' => $app_id,           //Replace {your-app-id} with your app ID '414647516265304'
-		'app_secret' => $app_secret,   //Replace {your-app-secret} with your app secret 'c1d911ec827f870cd29b90c789814960'
+		'app_id' => $app_id,           
+		'app_secret' => $app_secret,   
 		'graph_api_version' => 'v9.0',
 		'default_access_token' => $user_token,
 	]);
@@ -149,8 +149,8 @@ function facebook_feed_ez_user_picture() {
 	$page_id = esc_html(get_option('facebook_feed_ez_page_id'));
 
 	$fb = new \Facebook\Facebook([
-		'app_id' => $app_id,           //Replace {your-app-id} with your app ID '414647516265304'
-		'app_secret' => $app_secret,   //Replace {your-app-secret} with your app secret 'c1d911ec827f870cd29b90c789814960'
+		'app_id' => $app_id,           
+		'app_secret' => $app_secret,   
 		'graph_api_version' => 'v9.0'
 	]);
 
