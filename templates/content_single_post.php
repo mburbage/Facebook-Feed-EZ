@@ -9,7 +9,7 @@
 	</div>
 	<div class="post-footer">
 		<div class="post-message">
-			<? echo $post['message'];?>
+			<? echo $post['message'] ? $post['message'] : $post['description'];?>
 		</div>
 		<div class="post-engagements">
 			<div class="post-like <? echo $post['likes'] ? '' : 'hide'; ?>">

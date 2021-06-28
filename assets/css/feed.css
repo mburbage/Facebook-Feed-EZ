@@ -78,14 +78,14 @@
 	position: relative;
 	padding: 3px;
 }
-.facebook-feed-ez-wrapper{
+.social-feed-ez-wrapper{
 	
 }
-.facebook-feed-ez-3col {
+.social-feed-ez-3col {
 	display: inline-grid;
     grid-template-columns: 33% 33% 33%;
 }
-.facebook-feed-ez-3col .post-inner.has-image {
+.social-feed-ez-3col .post-inner.has-image {
     height: 300px;
     width: auto;
     position: relative;
@@ -96,7 +96,7 @@
     -ms-border-radius: 8px;
     -o-border-radius: 8px;
 }
-.facebook-feed-ez-3col .post-footer {
+.social-feed-ez-3col .post-footer {
     position: relative;
     bottom: 0;
     padding: 14px;

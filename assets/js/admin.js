@@ -1,32 +1,36 @@
 window.addEventListener('DOMContentLoaded', (event) => {
-    document.querySelector('#facebook-feed-ez-verify-token').addEventListener('click', function (evt){
+    document.querySelector('#social-feed-ez-verify-token').addEventListener('click', function (evt){
 		verifyPageAccessToken();
 	});
 });
 
 function verifyPageAccessToken () {
 
-	const feedNonce = document.querySelector('#facebook-feed-ez-none').value;		
-	const userAccessToken = document.querySelector('#facebook_feed_ez_access_token').value;	
+	const feedNonce = document.querySelector('#social-feed-ez-none').value;		
+	const userAccessToken = document.querySelector('#social_feed_ez_access_token').value;	
 	
 	jQuery.ajax({
 		url: plugin_data.ajaxurl,
 		type: 'POST',
 		dataType: 'json',
 		data: {
-			'action': 'facebook_feed_ez_verify_token',
+			'action': 'social_feed_ez_verify_token',
 			'fb-feed-nonce': feedNonce,
 			'fb-access-token': userAccessToken,
 		},
 		success: function (response) {
 
-			console.log(response['expires_in']);
-
 			if( response['expires_in'] > 0 ){
-				document.querySelector('#facebook_feed_ez_ll_access_token').value = response['access_token'];
+				document.querySelector('#social_feed_ez_ll_access_token').value = response['access_token'];
 			}
 
-			myAdminNotice( '<p>Long-live token recieved.</p>', 'notice-info' );
+            let expiresMilli = Date.now() + (response['expires_in'] * 1000);
+
+            let expireDate = new Date(expiresMilli).toLocaleDateString();
+
+            console.log(expiresMilli);
+
+			myAdminNotice( '<p>Long-live token recieved. Token expires in '+ expireDate.toString() +'</p>', 'notice-info' );
 
 			//addEpisodeSet(response, null, null, true);
 
@@ -58,7 +62,7 @@ function myAdminNotice( msg, type ) {
      
     /* create paragraph element to hold message */
      
-    var p = document.createElement( 'div' );
+    var p = document.createElement( 'p' );
      
     /* Add message text */
      
