@@ -93,10 +93,10 @@ function social_feed_ez_init() {
 			);
 		}
 	} catch (\Facebook\Exceptions\FacebookResponseException $e) {
-		echo 'Graph returned an error: ' . $e->getMessage();
+		echo 'Graph returned an error: ' . esc_html($e->getMessage());
 		exit;
 	} catch (\Facebook\Exceptions\FacebookSDKException $e) {
-		echo 'Facebook SDK returned an error: ' . $e->getMessage();
+		echo 'Facebook SDK returned an error: ' . esc_html($e->getMessage());
 		exit;
 	}
 

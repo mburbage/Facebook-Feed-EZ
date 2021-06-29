@@ -287,7 +287,7 @@ function social_feed_ez_options_page_html() {
 
 
 	if (isset($_GET)) {
-		$active_tab = $_GET['tab'] ? $_GET['tab'] : 'fb_page_settings';
+		$active_tab = $_GET['tab'] ? sanitize_text_field($_GET['tab']) : 'fb_page_settings';
 	};
 
 ?>
@@ -345,13 +345,13 @@ function social_feed_ez_verify_token($args) {
 			$response = $fb->get('/oauth/access_token?grant_type=fb_exchange_token&fb_exchange_token=' . $user_token . '&client_id=' . $app_id . '&client_secret=' . $app_secret);
 			
 		} catch (\Facebook\Exceptions\FacebookResponseException $e) {
-			echo 'Graph returned an error: ' . $e->getMessage();
+			echo 'Graph returned an error: ' . esc_html($e->getMessage());
 			wp_die();
 		} catch (\Facebook\Exceptions\FacebookSDKException $e) {
-			echo 'Facebook SDK returned an error: ' . $e->getMessage();
+			echo 'Facebook SDK returned an error: ' . esc_html($e->getMessage());
 			wp_die();
 		} catch (Facebook\Exceptions\FacebookAuthenticationException $e) {
-			echo 'Facebook SDK returned an error: ' . $e->getMessage();
+			echo 'Facebook SDK returned an error: ' . esc_html($e->getMessage());
 			wp_die();
 		}
 
