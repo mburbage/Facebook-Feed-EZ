@@ -66,11 +66,10 @@ function social_feed_ez_scripts() {
 
 function social_feed_ez_init() {
 
-	$app_id = esc_html(get_option('social_feed_ez_app_id'));
-	$app_secret = esc_html(get_option('social_feed_ez_app_secret'));
-	//$page_id = esc_html(get_option('social_feed_ez_page_id'));
-	$ll_token = esc_html(get_option('social_feed_ez_ll_access_token'));
-	$page_id = esc_html(get_option('social_feed_ez_page_id'));
+	$app_id = sanitize_text_field(get_option('social_feed_ez_app_id'));
+	$app_secret = sanitize_text_field(get_option('social_feed_ez_app_secret'));
+	$ll_token = sanitize_text_field(get_option('social_feed_ez_ll_access_token'));
+	$page_id = sanitize_text_field(get_option('social_feed_ez_page_id'));
 
 	$fb = new \Facebook\Facebook([
 		'app_id' => $app_id,
@@ -118,7 +117,7 @@ function social_feed_ez_display($results) {
 		// Start output buffering
 		ob_start();
 
-		echo '<div class="social-feed-ez-wrapper ' . get_option('social_feed_display_type') . '">';
+		echo '<div class="social-feed-ez-wrapper ' . esc_html(sanitize_text_field(get_option('social_feed_display_type'))) . '">';
 
 		foreach ($results as &$post) {
 
@@ -145,11 +144,10 @@ function social_feed_ez_display($results) {
 function social_feed_ez_user_picture() {
 
 	//
-	$app_id = esc_html(get_option('social_feed_ez_app_id'));
-	$app_secret = esc_html(get_option('social_feed_ez_app_secret'));
-	//$page_id = esc_html(get_option('social_feed_ez_page_id'));
-	$ll_token = esc_html(get_option('social_feed_ez_ll_access_token'));
-	$page_id = esc_html(get_option('social_feed_ez_page_id'));
+	$app_id = sanitize_text_field(get_option('social_feed_ez_app_id'));
+	$app_secret = sanitize_text_field(get_option('social_feed_ez_app_secret'));
+	$ll_token = sanitize_text_field(get_option('social_feed_ez_ll_access_token'));
+	$page_id = sanitize_text_field(get_option('social_feed_ez_page_id'));
 
 	$fb = new \Facebook\Facebook([
 		'app_id' => $app_id,
