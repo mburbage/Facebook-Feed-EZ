@@ -205,7 +205,7 @@ function social_feed_ez_field_page_id_cb($args) {
  */
 function social_feed_ez_field_app_token_cb($args) {
 	// Get the value of the setting we've registered with register_setting()
-	$options = get_option('social_feed_ez_access_token');
+	$options = sanitize_text_field(get_option('social_feed_ez_access_token'));
 
 	$fb_feed_nonce = wp_create_nonce('social-feed-ez');
 
@@ -226,7 +226,7 @@ function social_feed_ez_field_app_token_cb($args) {
  */
 function social_feed_ez_field_ll_app_token_cb($args) {
 	// Get the value of the setting we've registered with register_setting()
-	$options = get_option('social_feed_ez_ll_access_token');
+	$options = sanitize_text_field(get_option('social_feed_ez_ll_access_token'));
 ?>
 	<input type="text" class="regular-text ltr" id="social_feed_ez_ll_access_token" name="social_feed_ez_ll_access_token" value="<?php echo esc_html($options); ?>" readonly="readonly" />
 	<p class="description">
@@ -242,9 +242,8 @@ function social_feed_ez_field_ll_app_token_cb($args) {
  */
 function social_feed_ez_field_display_cb($args) {
 	// Get the value of the setting we've registered with register_setting()
-	$options = get_option('social_feed_display_type');
+	$options = sanitize_text_field(get_option('social_feed_display_type'));
 
-	echo '<script>console.log('.json_encode( $options ).');</script>';
 ?>
 	<select type="text" class="regular-text ltr" id="social_feed_display_type" name="social_feed_display_type" value="<?php echo esc_html($options); ?>">
 	<option value="social-feed-ez-1col" <? echo $options == 'social-feed-ez-1col' ? 'selected' : ''; ?>>One column</option>
@@ -261,7 +260,7 @@ function social_feed_ez_field_display_cb($args) {
  * 
  */
 function social_feed_ez_field_app_id($args) {
-	$options = get_option('social_feed_ez_field__options');
+	$options = sanitize_text_field(get_option('social_feed_ez_field__options'));
 }
 
 /**
@@ -321,13 +320,13 @@ function social_feed_ez_options_page_html() {
  */
 function social_feed_ez_verify_token($args) {
 
-	if (isset($_POST['fb-feed-nonce']) && wp_verify_nonce($_POST['fb-feed-nonce'], 'social-feed-ez') && isset($_POST['fb-access-token'])) {
+	if ( null !== sanitize_text_field($_POST['fb-feed-nonce']) && wp_verify_nonce(sanitize_text_field($_POST['fb-feed-nonce']), 'social-feed-ez') && null !== sanitize_text_field($_POST['fb-access-token'])) {
 
 		
 
 		$app_id = esc_html(get_option('social_feed_ez_app_id'));
 		$app_secret = esc_html(get_option('social_feed_ez_app_secret'));
-		$user_token = esc_html($_POST['fb-access-token']);
+		$user_token = esc_html(sanitize_text_field($_POST['fb-access-token']));
 
 
 

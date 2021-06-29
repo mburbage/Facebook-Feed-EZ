@@ -6,7 +6,7 @@
  * Author:              Red Circle
  * Author URI:          https://services.redcircle.biz/
  *
- * Version:             1.0
+ * Version:             0.1.0
  * Requires at least:   3.8.0
  * Requires PHP:        5.2
  *
@@ -164,10 +164,10 @@ function social_feed_ez_user_picture() {
 			$ll_token
 		);
 	} catch (FacebookExceptionsFacebookResponseException $e) {
-		echo 'Graph returned an error: ' . $e->getMessage();
+		echo 'Graph returned an error: ' . esc_html($e->getMessage());
 		exit;
 	} catch (FacebookExceptionsFacebookSDKException $e) {
-		echo 'Facebook SDK returned an error: ' . $e->getMessage();
+		echo 'Facebook SDK returned an error: ' . esc_html($e->getMessage());
 		exit;
 	}
 
