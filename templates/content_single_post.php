@@ -36,8 +36,8 @@
 					</div>
 				</a>
 			</div>
-			<div class="post-open <? echo esc_html($post['permalink_url']) ? '' : 'hide'; ?>">
-				<a href="<? echo esc_html($post['permalink_url']); ?>" target="_blank">
+			<div class="post-open <? echo esc_url($post['permalink_url']) ? '' : 'hide'; ?>">
+				<a href="<? echo esc_url($post['permalink_url']); ?>" target="_blank">
 				<i class="far fa-arrow-alt-circle-right"></i>
 				</a>
 			</div>
