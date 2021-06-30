@@ -13,7 +13,7 @@
 		</div>
 		<div class="post-engagements">
 			<div class="post-like <? echo esc_html($post['likes']) ? '' : 'hide'; ?>">
-				<a href="<? echo esc_html($post['permalink_url']); ?>" target="_blank">
+				<a href="<? echo esc_url($post['permalink_url']); ?>" target="_blank">
 					<i class="far fa-thumbs-up"></i>
 					<div class="like-count">
 						<? echo esc_html($post['likes']) ? esc_html($post['likes']['count']) : ''; ?>
@@ -21,7 +21,7 @@
 				</a>
 			</div>
 			<div class="post-comment <? echo esc_html($post['comments']) ? '' : 'hide'; ?>">
-				<a href="<? echo esc_html($post['permalink_url']); ?>" target="_blank">
+				<a href="<? echo esc_url($post['permalink_url']); ?>" target="_blank">
 					<i class="far fa-comment"></i>
 					<div class="comment-count">
 						<? echo esc_html($post['comments']) ? esc_html($post['comments']['counts']) : ''; ?>
@@ -29,7 +29,7 @@
 				</a>
 			</div>
 			<div class="post-share <? esc_html(echo $post['shares']) ? '' : 'hide'; ?>">
-				<a href="<? echo esc_html($post['permalink_url']); ?>" target="_blank">
+				<a href="<? echo esc_url($post['permalink_url']); ?>" target="_blank">
 					<i class="far fa-share"></i>
 					<div class="share-count">
 						<? echo esc_html($post['shares']) ? esc_html($post['shares']['count']) : ''; ?>
