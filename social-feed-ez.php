@@ -132,7 +132,7 @@ function social_feed_ez_in_init() {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
 		if (curl_exec($ch) === false) {
-			echo 'Curl error: ' . curl_error($ch);
+			echo 'Curl error: ' . esc_html(curl_error($ch));
 		} 
 
 

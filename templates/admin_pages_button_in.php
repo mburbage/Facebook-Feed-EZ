@@ -13,19 +13,19 @@
 
         echo '<div class="page-item page-name">';
         echo '<img src="' . esc_html($get_profile_pic) . '" class="pages-profile-pic" />';
-        echo $value['name'];
+        echo esc_html($value['name']);
         //echo $value['instagram_business_account']['id'] ? ' Instagram: ' : ' Facebook: ';
         echo '</div>';
         echo '<div class="page-item ig-page-name">';
 		echo 'Instagram: ';
         $checked = $options == $ig_page_id ? 'checked' : '';
-        echo '<input type="radio" id="' . $ig_page_id . '" name="page" value="' . $ig_page_id . '" ' . $ig_page_id_disabled . ' ' . $checked . '>';
+        echo '<input type="radio" id="' . esc_html($ig_page_id) . '" name="page" value="' . esc_html($ig_page_id) . '" ' . esc_html($ig_page_id_disabled) . ' ' . esc_html($checked) . '>';
         //echo $value['instagram_business_account']['id'] ? $value['instagram_business_account']['id'] : 'Instagram Page Not Found';
         echo '</div>';
         echo '<div class="page-item fb-page-name">';
 		echo 'Facebook: ';
         $checked = $options == $fb_page_id ? 'checked' : '';
-        echo '<input type="radio" id="' . $fb_page_id . '" name="page" value="' . $fb_page_id . '" ' . $checked . '>';
+        echo '<input type="radio" id="' . esc_html($fb_page_id) . '" name="page" value="' . esc_html($fb_page_id) . '" ' . esc_html($checked) . '>';
         echo '</div>'; 
         ?>
     </div>

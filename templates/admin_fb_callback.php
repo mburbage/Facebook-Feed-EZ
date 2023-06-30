@@ -32,21 +32,21 @@ try {
 	$accessToken = $helper->getAccessToken();
 } catch (Facebook\Exceptions\FacebookResponseException $e) {
 	// When Graph returns an error
-	echo 'Graph returned an error callback: ' . $e->getMessage();
+	echo 'Graph returned an error callback: ' . esc_html($e->getMessage());
 	exit;
 } catch (Facebook\Exceptions\FacebookSDKException $e) {
 	// When validation fails or other local issues
-	echo 'Facebook SDK returned an error callback: ' . $e->getMessage();
+	echo 'Facebook SDK returned an error callback: ' . esc_html($e->getMessage());
 	exit;
 }
 
 if (!isset($accessToken)) {
 	if ($helper->getError()) {
 		header('HTTP/1.0 401 Unauthorized');
-		echo "Error: " . $helper->getError() . "\n";
-		echo "Error Code: " . $helper->getErrorCode() . "\n";
-		echo "Error Reason: " . $helper->getErrorReason() . "\n";
-		echo "Error Description: " . $helper->getErrorDescription() . "\n";
+		echo "Error: " . esc_html($helper->getError()) . "\n";
+		echo "Error Code: " . esc_html($helper->getErrorCode()) . "\n";
+		echo "Error Reason: " . esc_html($helper->getErrorReason()) . "\n";
+		echo "Error Description: " . esc_html($helper->getErrorDescription()) . "\n";
 	} else {
 		header('HTTP/1.0 400 Bad Request');
 		echo 'Bad request';
@@ -78,7 +78,7 @@ if (!$accessToken->isLongLived()) {
 	try {
 		$accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
 	} catch (Facebook\Exceptions\FacebookSDKException $e) {
-		echo "<p>Error getting long-lived access token: " . $e->getMessage() . "</p>\n\n";
+		echo "<p>Error getting long-lived access token: " . esc_html($e->getMessage()) . "</p>\n\n";
 		exit;
 	}
 
@@ -103,10 +103,10 @@ try {
 
 	$response = $fb->get('/' . $user_id . '/accounts?fields=instagram_business_account,name,id', $accessToken->getValue());
 } catch (\Facebook\Exceptions\FacebookResponseException $e) {
-	echo 'Graph returned an error: ' . $e->getMessage();
+	echo 'Graph returned an error: ' . esc_html($e->getMessage());
 	exit;
 } catch (\Facebook\Exceptions\FacebookSDKException $e) {
-	echo 'Facebook SDK returned an error: ' . $e->getMessage();
+	echo 'Facebook SDK returned an error: ' . esc_html($e->getMessage());
 	exit;
 }
 

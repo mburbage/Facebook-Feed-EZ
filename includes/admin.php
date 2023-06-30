@@ -266,7 +266,7 @@ function social_feed_ez_section_fb_login($args) {
 	$loginUrl = $helper->getLoginUrl(plugins_url() . '/social-feed-ez/templates/admin_fb_callback.php', $permissions);
 
 
-	echo '<a href="' . $loginUrl . '" target="_blank">Log in with Facebook!</a>';
+	echo '<a href="' . esc_html($loginUrl) . '" target="_blank">Log in with Facebook!</a>';
 }
 
 /**
@@ -303,7 +303,7 @@ function social_feed_ez_section_fb_profiles($args) {
 	
 		}
 	}else{
-		echo $_SESSION['fb_callback_results'];
+		echo esc_html($_SESSION['fb_callback_results']);
 	}
 
 	
@@ -358,7 +358,7 @@ function social_feed_ez_field_app_id_cb($args) {
 	// Get the value of the setting we've registered with register_setting()
 	$options = sanitize_text_field(get_option('social_feed_ez_app_id'));
 ?>
-	<input type="text" class="regular-text ltr" name="social_feed_ez_app_id" value="<?php echo $options; ?>" />
+	<input type="text" class="regular-text ltr" name="social_feed_ez_app_id" value="<?php echo esc_html($options); ?>" />
 	<p class="description">
 		<?php esc_html_e('Description', 'social_feed_ez'); ?>
 	</p>
@@ -374,7 +374,7 @@ function social_feed_ez_field_app_secret_cb($args) {
 	// Get the value of the setting we've registered with register_setting()
 	$options = sanitize_text_field(get_option('social_feed_ez_app_secret'));
 ?>
-	<input type="text" class="regular-text ltr" name="social_feed_ez_app_secret" value="<?php echo $options; ?>" />
+	<input type="text" class="regular-text ltr" name="social_feed_ez_app_secret" value="<?php esc_html($options); ?>" />
 	<p class="description">
 		<?php esc_html_e('Description', 'social_feed_ez'); ?>
 	</p>
@@ -390,7 +390,7 @@ function social_feed_ez_field_page_id_cb($args) {
 	// Get the value of the setting we've registered with register_setting()
 	$options = sanitize_text_field(get_option('social_feed_ez_page_id'));
 ?>
-	<input type="text" class="regular-text ltr" name="social_feed_ez_page_id" id="social_feed_ez_page_id" value="<?php echo $options; ?>" />
+	<input type="text" class="regular-text ltr" name="social_feed_ez_page_id" id="social_feed_ez_page_id" value="<?php echo esc_html($options); ?>" />
 	<p class="description">
 		<?php esc_html_e('Description', 'social_feed_ez'); ?>
 	</p>
@@ -406,7 +406,7 @@ function social_feed_ez_field_page_id_cb_profiles($args) {
 	// Get the value of the setting we've registered with register_setting()
 	$options = sanitize_text_field(get_option('social_feed_ez_page_id'));
 ?>
-	<input type="text" class="regular-text ltr" name="social_feed_ez_page_id" id="social_feed_ez_page_id" value="<?php echo '' == $options ? $_SESSION['fb_callback_results'][0]['id'] : $options; ?>" />
+	<input type="text" class="regular-text ltr" name="social_feed_ez_page_id" id="social_feed_ez_page_id" value="<?php echo '' == esc_html($options) ? esc_html($_SESSION['fb_callback_results'][0]['id']) : esc_html($options); ?>" />
 	<p class="description">
 		<?php esc_html_e('Description', 'social_feed_ez'); ?>
 	</p>
@@ -425,9 +425,9 @@ function social_feed_ez_field_app_token_cb($args) {
 	$fb_feed_nonce = wp_create_nonce('social-feed-ez');
 
 ?>
-	<input type="text" class="regular-text ltr" id="social_feed_ez_access_token" name="social_feed_ez_access_token" value="<?php echo $options; ?>" />
+	<input type="text" class="regular-text ltr" id="social_feed_ez_access_token" name="social_feed_ez_access_token" value="<?php esc_html($options); ?>" />
 	<div id="social-feed-ez-verify-token" class="facbook-feed-ez-btn">Verify Token</div>
-	<input type="hidden" id="social-feed-ez-none" value="<? echo $fb_feed_nonce; ?>">
+	<input type="hidden" id="social-feed-ez-none" value="<? echo esc_html($fb_feed_nonce); ?>">
 	<p class="description">
 		<?php esc_html_e('Description', 'social_feed_ez'); ?>
 	</p>
@@ -443,7 +443,7 @@ function social_feed_ez_field_ll_app_token_cb($args) {
 	// Get the value of the setting we've registered with register_setting()
 	$options = sanitize_text_field(get_option('social_feed_ez_ll_access_token'));
 ?>
-	<input type="text" class="regular-text ltr" id="social_feed_ez_ll_access_token" name="social_feed_ez_ll_access_token" value="<?php echo $options; ?>" />
+	<input type="text" class="regular-text ltr" id="social_feed_ez_ll_access_token" name="social_feed_ez_ll_access_token" value="<?php echo esc_html($options); ?>" />
 	<p class="description">
 		<?php esc_html_e('Description', 'social_feed_ez'); ?>
 	</p>
@@ -460,7 +460,7 @@ function social_feed_ez_field_ll_app_token_cb_profiles($args) {
 	$options = sanitize_text_field(get_option('social_feed_ez_ll_access_token'));
 	//$_SESSION['fb_access_token']
 ?>
-	<input type="text" class="regular-text ltr" id="social_feed_ez_ll_access_token" name="social_feed_ez_ll_access_token" value="<?php echo '' == $options ? $_SESSION['fb_access_token'] : $options; ?>" />
+	<input type="text" class="regular-text ltr" id="social_feed_ez_ll_access_token" name="social_feed_ez_ll_access_token" value="<?php echo '' == esc_html($options) ? esc_html($_SESSION['fb_access_token']) : esc_html($options); ?>" />
 	<p class="description">
 		<?php esc_html_e('Description', 'social_feed_ez'); ?>
 	</p>
@@ -477,7 +477,7 @@ function social_feed_ez_field_display_cb($args) {
 	$options = sanitize_text_field(get_option('social_feed_display_type'));
 
 ?>
-	<select type="text" class="regular-text ltr" id="social_feed_display_type" name="social_feed_display_type" value="<?php echo $options; ?>">
+	<select type="text" class="regular-text ltr" id="social_feed_display_type" name="social_feed_display_type" value="<?php echo esc_html($options); ?>">
 		<option value="social-feed-ez-1col" <? echo $options == 'social-feed-ez-1col' ? 'selected' : ''; ?>>One column</option>
 		<option value="social-feed-ez-3col" <? echo $options == 'social-feed-ez-3col' ? 'selected' : ''; ?>>Three columns</option>
 	</select>
