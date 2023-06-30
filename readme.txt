@@ -13,7 +13,7 @@ Social Feed EZ is a simple plugin for WordPress developer to access and display 
 
 == Description ==
 
-Greetings. [Red Circle](https://redcircle.biz/ "Digital Marketing") has developed a easy to use Facebook feed plugin for developers to easily add facebook content to their website. We wanted to develop a plugins that was as barebones as possible to maintain a smaller file size, and use less website resources. Our plugin reduces the need to write the code to access your feed and display it on your page. We gone ahead and developed a basic display for your feed, but you're welcome to customize your own as well. Please contact us with any problems you may have and we will be happy to help.
+Greetings. [Red Circle](https://redcircle.biz/ "Digital Marketing") has developed a easy to use Facebook feed plugin for developers to easily add facebook content to their website. We wanted to develop a plugins that was as barebones as possible to maintain a smaller file size, and use less website resources. Our plugin reduces the need to write the code to access your feed and display it on your page. We've gone ahead and developed a basic display for your feed, but you're welcome to customize your own as well. Please contact us with any problems you may have and we will be happy to help.
 
 For additional support you can submit a ticket through our [support page](https://services.redcircle.biz/supporttickets.php "Support"). Or you can read more on our plugin forum or [knowledgebase](https://services.redcircle.biz/knowledgebase "Knowledgebase")
 
@@ -35,21 +35,9 @@ Shortcode: [social_feed_ez]
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
-
-An answer to that question.
-
-= What about foo bar? =
-
-Answer to foo bar dilemma.
-
 == Screenshots ==
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
+1. Social Feed EZ admin area.
 
 == Changelog ==
 

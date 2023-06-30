@@ -28,7 +28,7 @@
 					</div>
 				</a>
 			</div>
-			<div class="post-share <? esc_html(echo $post['shares']) ? '' : 'hide'; ?>">
+			<div class="post-share <? echo esc_html($post['shares']) ? '' : 'hide'; ?>">
 				<a href="<? echo esc_url($post['permalink_url']); ?>" target="_blank">
 					<i class="far fa-share"></i>
 					<div class="share-count">

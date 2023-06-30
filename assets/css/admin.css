@@ -10,13 +10,55 @@
 	color: #fff;
 	background-color: #9b9b9b;
 	cursor: pointer;
-	transition: all 400ms ;
-	-webkit-transition: all 400ms ;
-	-moz-transition: all 400ms ;
-	-ms-transition: all 400ms ;
-	-o-transition: all 400ms ;
+	transition: all 400ms;
+	-webkit-transition: all 400ms;
+	-moz-transition: all 400ms;
+	-ms-transition: all 400ms;
+	-o-transition: all 400ms;
 }
 
 .facbook-feed-ez-btn:hover {
 	background-color: #636363;
+}
+
+.pages-wrapper {
+	width: fit-content;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.page-wrapper .page-row {
+	display: flex;
+	margin: 8px;
+	padding: 8px 0px;
+	background-color: white;
+}
+
+.page-item {
+	margin: 8px 24px;
+	display: flex;
+	align-items: center;
+}
+.page-item input{
+	margin: 2px 6px;
+	
+}
+
+.page-item.page-name {
+	width: 350px;
+	display: flex;
+	align-items: center;
+}
+
+.pages-profile-pic {
+	width: 48px;
+	padding: 2px;
+	margin: 4px;
+	box-sizing: border-box;
+	border-radius: 50%;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	-ms-border-radius: 50%;
+	-o-border-radius: 50%;
+	border: 2px solid grey;
 }

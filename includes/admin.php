@@ -1,5 +1,12 @@
 <?php
 
+session_start();
+
+// ini_set('display_errors', 1);
+// error_reporting(E_ALL | E_STRICT);
+
+require_once 'FacebookData.php';
+
 /**
  * Register our wporg_settings_init to the admin_init action hook.
  */
@@ -17,6 +24,10 @@ add_action('admin_menu', 'social_feed_ez_options_page');
  */
 add_action('wp_ajax_nopriv_social_feed_ez_verify_token', 'social_feed_ez_verify_token', 10, 1);
 add_action('wp_ajax_social_feed_ez_verify_token', 'social_feed_ez_verify_token', 10, 1);
+
+if (!defined('SOCIAL_FEED_EZ_PLUGIN_DIR')) {
+	define('SOCIAL_FEED_EZ_PLUGIN_DIR', dirname(__FILE__));
+}
 
 /**
  * Add the top level menu page.
@@ -40,7 +51,7 @@ function social_feed_ez_settings_init() {
 	if (is_admin()) {
 		if (isset($_REQUEST['page']) && 'social_feed_ez' == sanitize_text_field($_REQUEST['page'])) {
 
-			wp_enqueue_script('social_feed_ez_admin', plugins_url('/assets/js/admin.js', __DIR__));
+			wp_enqueue_script('social_feed_ez_admin', plugins_url() . '/social-feed-ez/assets/js/admin.js');
 
 			wp_localize_script(
 				'social_feed_ez_admin',
@@ -50,7 +61,7 @@ function social_feed_ez_settings_init() {
 				)
 			);
 
-			wp_enqueue_style('social_feed_ez_admin_css', plugins_url('/assets/css/admin.css', __DIR__));
+			wp_enqueue_style('social_feed_ez_admin_css', plugins_url() . '/social-feed-ez/assets/css/admin.css', true);
 		}
 	}
 
@@ -62,6 +73,8 @@ function social_feed_ez_settings_init() {
 	register_setting('social_feed_ez_token', 'social_feed_ez_access_token');
 	register_setting('social_feed_ez_token', 'social_feed_ez_ll_access_token');
 	register_setting('social_feed_display', 'social_feed_display_type');
+	register_setting('social_feed_profiles', 'social_feed_ez_page_id');
+	register_setting('social_feed_profiles', 'social_feed_ez_ll_access_token');
 
 	// Register a new section in the "wporg" page.
 	add_settings_section(
@@ -84,6 +97,20 @@ function social_feed_ez_settings_init() {
 		'social_feed_ez_section_developers_callback',
 		'social_feed_display'
 	);
+	// Register a new section in the "wporg" page.
+	add_settings_section(
+		'social_feed_ez_section_developers',
+		__('Facebook Feed Login', 'social_feed_login'),
+		'social_feed_ez_section_fb_login',
+		'social_feed_login'
+	);
+	// Register a new section in the "wporg" page.
+	add_settings_section(
+		'social_feed_ez_section_developers',
+		__('Facebook Feed Profiles', 'social_feed_profiles'),
+		'social_feed_ez_section_fb_profiles',
+		'social_feed_profiles'
+	);
 
 	// Register a new field in the "wporg_section_developers" section, inside the "wporg" page.
 	add_settings_field(
@@ -104,14 +131,14 @@ function social_feed_ez_settings_init() {
 		'social_feed_ez_section_developers'
 	);
 	// Register a new field in the "wporg_section_developers" section, inside the "wporg" page.
-	add_settings_field(
-		'social_feed_ez_field_page_id', // As of WP 4.6 this value is used only internally.
-		// Use $args' label_for to populate the id inside the callback.
-		__('Page ID', 'social_feed_ez'),
-		'social_feed_ez_field_page_id_cb',
-		'social_feed_ez',
-		'social_feed_ez_section_developers'
-	);
+	// add_settings_field(
+	// 	'social_feed_ez_field_page_id', // As of WP 4.6 this value is used only internally.
+	// 	// Use $args' label_for to populate the id inside the callback.
+	// 	__('Page ID', 'social_feed_ez'),
+	// 	'social_feed_ez_field_page_id_cb',
+	// 	'social_feed_ez',
+	// 	'social_feed_ez_section_developers'
+	// );
 	// Register a new field in the "wporg_section_developers" section, inside the "wporg" page.
 	add_settings_field(
 		'social_feed_ez_field_app_token', // As of WP 4.6 this value is used only internally.
@@ -139,6 +166,24 @@ function social_feed_ez_settings_init() {
 		'social_feed_display',
 		'social_feed_ez_section_developers'
 	);
+	// Register a new field in the "wporg_section_developers" section, inside the "wporg" page.
+	add_settings_field(
+		'social_feed_ez_field_page_id', // As of WP 4.6 this value is used only internally.
+		// Use $args' label_for to populate the id inside the callback.
+		__('Page ID', 'social_feed_profiles'),
+		'social_feed_ez_field_page_id_cb_profiles',
+		'social_feed_profiles',
+		'social_feed_ez_section_developers'
+	);
+	// Register a new field in the "wporg_section_developers" section, inside the "wporg" page.
+	add_settings_field(
+		'social_feed_ez_field_ll_app_token', // As of WP 4.6 this value is used only internally.
+		// Use $args' label_for to populate the id inside the callback.
+		__('Page Long-Lived Access Token', 'social_feed_profiles'),
+		'social_feed_ez_field_ll_app_token_cb_profiles',
+		'social_feed_profiles',
+		'social_feed_ez_section_developers'
+	);
 }
 
 /**
@@ -148,6 +193,160 @@ function social_feed_ez_settings_init() {
  */
 function social_feed_ez_section_developers_callback($args) {
 }
+
+/**
+ * Developers section fb login function.
+ *
+ * @param array $args  The settings array, defining title, id, callback.
+ */
+function social_feed_ez_section_in_login($args) {
+
+	if ('' == sanitize_text_field(get_option('social_feed_ez_app_id')) || '' == sanitize_text_field(get_option('social_feed_ez_app_secret'))) {
+		wp_die('Error: Missing Facebook App ID or App Secret. Return to settings and enter your app ID and Secret', 'Error: Missing Facebook App ID or App Secret');
+	}
+
+	$app_id = sanitize_text_field(get_option('social_feed_ez_app_id'));
+	$app_secret = sanitize_text_field(get_option('social_feed_ez_app_secret'));
+
+	$curl = curl_init();
+	curl_setopt_array($curl, array(
+		CURLOPT_URL => "https://api.instagram.com/oauth/access_token",
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_ENCODING => "",
+		CURLOPT_MAXREDIRS => 10,
+		CURLOPT_TIMEOUT => 0,
+		CURLOPT_FOLLOWLOCATION => true,
+		CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		CURLOPT_CUSTOMREQUEST => "POST",
+		CURLOPT_POSTFIELDS => array('client_id' => $app_id, 'client_secret' => $app_secret, 'grant_type' => 'authorization_code', 'redirect_uri' => plugins_url() . '/social-feed-ez/templates/admin_fb_callback.php', 'code' => '{code}'),
+		CURLOPT_HTTPHEADER => array(
+			"Content-Type: multipart/form-data; boundary=--------------------------780367731654051340650991"
+		),
+	));
+	$response = curl_exec($curl);
+	curl_close($curl);
+	//print_r($response);
+}
+
+/**
+ * Developers section fb login function.
+ *
+ * @param array $args  The settings array, defining title, id, callback.
+ */
+function social_feed_ez_section_fb_login($args) {
+
+	//session_start();
+
+	require_once dirname(__DIR__) . '/vendors/autoload.php'; // change path as needed
+
+	if ('' == sanitize_text_field(get_option('social_feed_ez_app_id')) || '' == sanitize_text_field(get_option('social_feed_ez_app_secret'))) {
+		wp_die('Error: Missing Facebook App ID or App Secret. Return to settings and enter your app ID and Secret', 'Error: Missing Facebook App ID or App Secret');
+	}
+
+	$app_id = sanitize_text_field(get_option('social_feed_ez_app_id'));
+	$app_secret = sanitize_text_field(get_option('social_feed_ez_app_secret'));
+
+
+	$fb = new \Facebook\Facebook([
+		'app_id' => $app_id,
+		'app_secret' => $app_secret,
+		'graph_api_version' => 'v17.0',
+		'default_graph_version' => 'v10.0',
+		//'default_access_token' => '{access-token}', // optional
+	]);
+
+	$helper = $fb->getRedirectLoginHelper();
+
+	if (isset($_GET['state'])) {
+		$helper->getPersistentDataHandler()->set('state', $_GET['state']);
+	}
+
+
+	$permissions = ['email', 'business_management', 'pages_show_list', 'instagram_basic', 'pages_read_engagement', 'ads_management']; // Optional permissions
+	$loginUrl = $helper->getLoginUrl(plugins_url() . '/social-feed-ez/templates/admin_fb_callback.php', $permissions);
+
+
+	echo '<a href="' . $loginUrl . '" target="_blank">Log in with Facebook!</a>';
+}
+
+/**
+ * Developers section fb profilesw function.
+ *
+ * @param array $args  The settings array, defining title, id, callback.
+ */
+function social_feed_ez_section_fb_profiles($args) {
+
+
+	$Facebook = new FacebookData();
+
+	
+
+	//echo '<script>console.log(' . $_SESSION['fb_callback_results'] . ');</script>';
+
+
+	echo '<div class="pages-wrapper">';
+
+	if($_SESSION['fb_callback_results'] !== null){
+		foreach ($_SESSION['fb_callback_results'] as $key => $value) {
+
+			//
+			$instagram_id = $value['instagram_business_account']['id'];
+			$facebook_id = $value['id'];
+	
+			$page_id = $instagram_id ? $instagram_id : $facebook_id;
+			
+			$profile_url = $instagram_id ? $Facebook->InstagramProfilePic($instagram_id) : $Facebook->FacebookProfilePic($facebook_id);
+	
+			$options = sanitize_text_field(get_option('social_feed_ez_page_id'));
+	
+			include SOCIAL_FEED_EZ_PLUGIN_DIR . '/templates/admin_pages_button_in.php';
+	
+		}
+	}else{
+		echo $_SESSION['fb_callback_results'];
+	}
+
+	
+	echo '</div>';
+}
+
+/**
+ * 
+ * 
+ */
+function social_feed_ez_fb_user_picture($id) {
+
+	//
+	$app_id = sanitize_text_field(get_option('social_feed_ez_app_id'));
+	$app_secret = sanitize_text_field(get_option('social_feed_ez_app_secret'));
+	$ll_token = sanitize_text_field(get_option('social_feed_ez_ll_access_token'));
+	$page_id = $id;
+
+	$fb = new \Facebook\Facebook([
+		'app_id' => $app_id,
+		'app_secret' => $app_secret,
+		'graph_api_version' => 'v9.0'
+	]);
+
+	try {
+		// Returns a `FacebookFacebookResponse` object
+		$response = $fb->get(
+			'/' . $page_id . '/picture?redirect=0',
+			$ll_token
+		);
+	} catch (FacebookExceptionsFacebookResponseException $e) {
+		echo 'Graph returned an error social_feed_ez_fb_user_picture: ' . esc_html($e->getMessage());
+		exit;
+	} catch (FacebookExceptionsFacebookSDKException $e) {
+		echo 'Facebook SDK returned an error social_feed_ez_fb_user_picture: ' . esc_html($e->getMessage());
+		exit;
+	}
+
+	$graphNode = $response->getGraphNode();
+
+	return $graphNode['url'];
+}
+
 
 /**
  * Input field for the app ID
@@ -191,7 +390,23 @@ function social_feed_ez_field_page_id_cb($args) {
 	// Get the value of the setting we've registered with register_setting()
 	$options = sanitize_text_field(get_option('social_feed_ez_page_id'));
 ?>
-	<input type="text" class="regular-text ltr" name="social_feed_ez_page_id" value="<?php echo $options; ?>" />
+	<input type="text" class="regular-text ltr" name="social_feed_ez_page_id" id="social_feed_ez_page_id" value="<?php echo $options; ?>" />
+	<p class="description">
+		<?php esc_html_e('Description', 'social_feed_ez'); ?>
+	</p>
+<?php
+}
+
+/**
+ * Input field for Page ID Callback
+ *
+ * @param array $args The settings array, defining title, id, callback.
+ */
+function social_feed_ez_field_page_id_cb_profiles($args) {
+	// Get the value of the setting we've registered with register_setting()
+	$options = sanitize_text_field(get_option('social_feed_ez_page_id'));
+?>
+	<input type="text" class="regular-text ltr" name="social_feed_ez_page_id" id="social_feed_ez_page_id" value="<?php echo '' == $options ? $_SESSION['fb_callback_results'][0]['id'] : $options; ?>" />
 	<p class="description">
 		<?php esc_html_e('Description', 'social_feed_ez'); ?>
 	</p>
@@ -228,7 +443,24 @@ function social_feed_ez_field_ll_app_token_cb($args) {
 	// Get the value of the setting we've registered with register_setting()
 	$options = sanitize_text_field(get_option('social_feed_ez_ll_access_token'));
 ?>
-	<input type="text" class="regular-text ltr" id="social_feed_ez_ll_access_token" name="social_feed_ez_ll_access_token" value="<?php echo $options; ?>" readonly="readonly" />
+	<input type="text" class="regular-text ltr" id="social_feed_ez_ll_access_token" name="social_feed_ez_ll_access_token" value="<?php echo $options; ?>" />
+	<p class="description">
+		<?php esc_html_e('Description', 'social_feed_ez'); ?>
+	</p>
+<?php
+}
+
+/**
+ * Input field for long-lived access token.
+ *
+ * @param array $args The settings array, defining title, id, callback.
+ */
+function social_feed_ez_field_ll_app_token_cb_profiles($args) {
+	// Get the value of the setting we've registered with register_setting()
+	$options = sanitize_text_field(get_option('social_feed_ez_ll_access_token'));
+	//$_SESSION['fb_access_token']
+?>
+	<input type="text" class="regular-text ltr" id="social_feed_ez_ll_access_token" name="social_feed_ez_ll_access_token" value="<?php echo '' == $options ? $_SESSION['fb_access_token'] : $options; ?>" />
 	<p class="description">
 		<?php esc_html_e('Description', 'social_feed_ez'); ?>
 	</p>
@@ -246,8 +478,8 @@ function social_feed_ez_field_display_cb($args) {
 
 ?>
 	<select type="text" class="regular-text ltr" id="social_feed_display_type" name="social_feed_display_type" value="<?php echo $options; ?>">
-	<option value="social-feed-ez-1col" <? echo $options == 'social-feed-ez-1col' ? 'selected' : ''; ?>>One column</option>
-	<option value="social-feed-ez-3col" <? echo $options == 'social-feed-ez-3col' ? 'selected' : ''; ?>>Three columns</option>
+		<option value="social-feed-ez-1col" <? echo $options == 'social-feed-ez-1col' ? 'selected' : ''; ?>>One column</option>
+		<option value="social-feed-ez-3col" <? echo $options == 'social-feed-ez-3col' ? 'selected' : ''; ?>>Three columns</option>
 	</select>
 	<p class="description">
 		<?php esc_html_e('Choose a preferred number of columns', 'social_feed_ez'); ?>
@@ -297,15 +529,21 @@ function social_feed_ez_options_page_html() {
 
 		require SOCIAL_FEED_EZ_PLUGIN_DIR . '/templates/admin_nav_tabs.php';
 
-		if ( 'fb_page_settings' == $active_tab ) {
-			require SOCIAL_FEED_EZ_PLUGIN_DIR . '/templates/admin_page_feed.php';		
+		if ('fb_page_settings' == $active_tab) {
+			require SOCIAL_FEED_EZ_PLUGIN_DIR . '/templates/admin_page_feed.php';
 		}
 
-		if ( 'fb_token_settings' == $active_tab ) {
+		if ('fb_token_settings' == $active_tab) {
 			require SOCIAL_FEED_EZ_PLUGIN_DIR . '/templates/admin_access_tokens.php';
 		}
-		if ( 'fb_display_settings' == $active_tab ) {
+		if ('fb_display_settings' == $active_tab) {
 			require SOCIAL_FEED_EZ_PLUGIN_DIR . '/templates/admin_display_settings.php';
+		}
+		if ('social_feed_login' == $active_tab) {
+			require SOCIAL_FEED_EZ_PLUGIN_DIR . '/templates/admin_fb_login.php';
+		}
+		if ('social_feed_profiles' == $active_tab) {
+			require SOCIAL_FEED_EZ_PLUGIN_DIR . '/templates/admin_fb_profiles.php';
 		}
 		?>
 
@@ -320,9 +558,9 @@ function social_feed_ez_options_page_html() {
  */
 function social_feed_ez_verify_token($args) {
 
-	if ( null !== sanitize_text_field($_POST['fb-feed-nonce']) && wp_verify_nonce(sanitize_text_field($_POST['fb-feed-nonce']), 'social-feed-ez') && null !== sanitize_text_field($_POST['fb-access-token'])) {
+	if (null !== sanitize_text_field($_POST['fb-feed-nonce']) && wp_verify_nonce(sanitize_text_field($_POST['fb-feed-nonce']), 'social-feed-ez') && null !== sanitize_text_field($_POST['fb-access-token'])) {
 
-		
+
 
 		$app_id = sanitize_text_field(get_option('social_feed_ez_app_id'));
 		$app_secret = sanitize_text_field(get_option('social_feed_ez_app_secret'));
@@ -333,25 +571,24 @@ function social_feed_ez_verify_token($args) {
 		$fb = new \Facebook\Facebook([
 			'app_id' => $app_id,           //Replace {your-app-id} with your app ID '414647516265304'
 			'app_secret' => $app_secret,   //Replace {your-app-secret} with your app secret 'c1d911ec827f870cd29b90c789814960'
-			'graph_api_version' => 'v9.0',
+			'graph_api_version' => 'v17.0',
 			'default_access_token' => $user_token,
 			'auth_type' => 'reauthorize',
 		]);
 
-		
+
 
 		try {
 			// Returns a `FacebookFacebookResponse` object
 			$response = $fb->get('/oauth/access_token?grant_type=fb_exchange_token&fb_exchange_token=' . $user_token . '&client_id=' . $app_id . '&client_secret=' . $app_secret);
-			
 		} catch (\Facebook\Exceptions\FacebookResponseException $e) {
-			echo 'Graph returned an error: ' . esc_html($e->getMessage());
+			echo 'Graph returned an error social_feed_ez_verify_token: ' . esc_html($e->getMessage());
 			wp_die();
 		} catch (\Facebook\Exceptions\FacebookSDKException $e) {
-			echo 'Facebook SDK returned an error: ' . esc_html($e->getMessage());
+			echo 'Facebook SDK returned an error social_feed_ez_verify_token: ' . esc_html($e->getMessage());
 			wp_die();
 		} catch (Facebook\Exceptions\FacebookAuthenticationException $e) {
-			echo 'Facebook SDK returned an error: ' . esc_html($e->getMessage());
+			echo 'Facebook Auth returned an error social_feed_ez_verify_token: ' . esc_html($e->getMessage());
 			wp_die();
 		}
 
